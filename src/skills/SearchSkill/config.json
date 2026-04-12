@@ -1,0 +1,13 @@
+{
+  "name": "SearchSkill",
+  "description": "一个搜索引擎大师，会帮你搜索任何你想要的",
+  "tools": [
+    "search"
+  ],
+  "params": [
+    {
+      "query": "搜索内容"
+    }
+  ],
+  "status": "ONLINE"
+}
