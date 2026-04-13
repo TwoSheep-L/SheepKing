@@ -69,7 +69,7 @@ class AgentRegister {
             name: skill.name,
             systemPrompt: skill.skillMarkdown,
             tools: tools as AgentTool<any>[],
-            maxIterations: 10,
+            maxIterations: 50,
             description: skill.description,
             params: skill.params,
         });

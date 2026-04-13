@@ -1,3 +1,4 @@
+import FsTool from "./FsTools.js";
 import ImageGenetate from "./ImageGenetate.js";
 import { toolRegistery } from "./registery.js";
 import SearchTool from "./search.js";
@@ -9,3 +10,4 @@ toolRegistery.registerTool(new ImageGenetate()); // 生成图片
 toolRegistery.registerTool(new UserInputTool()); // 请求用户输入
 toolRegistery.registerTool(new SearchTool()); // 搜索工具
 toolRegistery.registerTool(new SendQQMessage()); // 发送QQ消息
+toolRegistery.registerTool(new FsTool()); //  文件操作工具

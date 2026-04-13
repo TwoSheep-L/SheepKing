@@ -1,6 +1,7 @@
 import { agentSessionPool } from "@/core/AgentSessionPool.js";
 import { AgentTool } from "@/core/BaseAgentTool.js";
 import { agentRegistery } from "@/skills/index.js";
+import { log } from "@clack/prompts";
 import { v4 } from "uuid";
 
 interface CallAgentToolParams {
@@ -58,21 +59,29 @@ export default class CallAgentTool extends AgentTool<CallAgentToolParams> {
         } else {
             if (session_id) {
                 // 继续对话
-                console.log("继续对话", session_id);
                 const agent = agentSessionPool.getAgent(session_id);
                 if (agent) {
-                    const res = await agent.run(input || "", context || {});
-                    let output = res.output;
-                    return `session_id:${session_id}\n${output}`;
+                    log.step(`【继续对话】(${agent.name})${session_id}`);
+                    try {
+                        const res = await agent.run(input || "", context || {});
+                        let output = res.output;
+                        return `session_id:${session_id}\n${output}`;
+                    } catch (error: any) {
+                        return `session_id:${session_id}\n${error.message}`;
+                    }
                 }
             } else {
                 // 新对话
-                let result = await agent.run(input || "");
                 const id = v4();
-                console.log("新对话", id);
 
-                agentSessionPool.addAgent(id, agent);
-                return `session_id:${id}\n${result.output}`;
+                try {
+                    log.step(`【新对话】(${agent.name})${id}`);
+                    let result = await agent.run(input || "");
+                    agentSessionPool.addAgent(id, agent);
+                    return `session_id:${id}\n${result.output}`;
+                } catch (error: any) {
+                    return `session_id:${id}\n${error.message}`;
+                }
             }
             return "";
         }
