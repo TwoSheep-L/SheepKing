@@ -2,6 +2,7 @@ import { ChatCompletionMessageParam } from "openai/resources.mjs";
 import chatCompletion from "./llm.js";
 import { AgentTool } from "./BaseAgentTool.js";
 import BaseMessage from "./BaseMessage.js";
+import { log } from "@clack/prompts";
 
 export interface AgentRunResult {
     output: string | null;
@@ -97,7 +98,13 @@ export class BaseAgent {
                     continue;
                 }
                 const arguMents = JSON.parse(toolCall.function.arguments);
-                const toolResult = await tool.execute(arguMents);
+                let toolResult: string = "";
+                try {
+                    toolResult = await tool.execute(arguMents);
+                } catch (error: any) {
+                    toolResult = error.message;
+                    log.error("Tool error");
+                }
 
                 this.message.addMessage({
                     role: "tool",

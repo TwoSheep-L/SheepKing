@@ -1,0 +1,8 @@
+{
+  "name": "FsSkill",
+  "description": "文件处理Skill,增删改查文件",
+  "tools": [
+    "FsTool"
+  ],
+  "status": "ONLINE"
+}

@@ -6,7 +6,7 @@ import TestTool from "./tools/search.js";
 import "@/skills/index.js";
 import { OrchestratorAgent } from "./core/OrchestratorAgent.js";
 import { sendPrivateMsg } from "./tools/SendQQMessage.js";
-import { text, intro, outro } from "@clack/prompts";
+import { text, intro, outro, log } from "@clack/prompts";
 
 async function main() {
     // await CreatSkillCliMain();
@@ -16,12 +16,14 @@ async function main() {
     await intro(`AI初始化完成,加载${agentRegistery.getAgents().length}个Skill`);
 
     if (agent) {
-        const userInput = await text({
-            message: "和AI的对话:",
-        });
-        if (typeof userInput !== "string") return;
-        let result = await agent.run(userInput);
-        console.log(result);
+        for (let index = 0; index < 999; index++) {
+            const userInput = await text({
+                message: "对话:",
+            });
+            if (typeof userInput !== "string") return;
+            let result = await agent.run(userInput);
+            log.message(result.output || "");
+        }
     }
 }
 
