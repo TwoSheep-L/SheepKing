@@ -88,6 +88,8 @@ Skill动态参数: \n${paramsString}
 export async function CreatSkillCliMain() {
     intro("🎉 开始创建Skill");
 
+    let selectTools: AgentTool<any>[] = [];
+
     // Skill名字
     const skillName = await text({
         message: "请输入Skill名称(英文):",
@@ -142,7 +144,14 @@ export async function CreatSkillCliMain() {
             message: "请选择要使用的工具 可空(上下切换,空格选择):",
             options: toolsOptions,
         });
+        selectTools;
         if (typeof tool !== "object") return outro("❌ 取消创建");
+        tool.forEach((t) => {
+            const tool = tools.find((tool) => tool.name === t);
+            if (tool) {
+                selectTools.push(tool);
+            }
+        });
     } else {
         log.info("没有可用工具,跳过工具选择");
     }
@@ -185,7 +194,7 @@ export async function CreatSkillCliMain() {
         skillString = await AiCreateSkill(
             skillName,
             description,
-            tools,
+            selectTools,
             params,
         );
         let savePath = path.resolve(SkillLoader.SKILL_PATH, skillName);

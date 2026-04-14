@@ -26,6 +26,7 @@ ${agentList}
 2. input 是调用的子Agent的输入,是他的userPrompt
 3. context 是调用的子Agent的输入,是他的context,会被用于替换对应systemPrompt中的变量
 4. session_id 是本次会话的id,用于追踪会话,你可以使用这个id来保存会话结果,如果Agent需要二次请求输入,你可以使用这个id来继续和该Agent对话
+5. 调用Agent时候要给它传入它可能会有用的context,传入到input可以中让Agent进行信息提取
 
 ## 继续对话规则:
 1. 如果子Agent需要二次请求输入,你可以使用session_id来继续和该Agent对话

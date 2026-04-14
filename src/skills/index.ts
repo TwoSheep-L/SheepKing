@@ -2,6 +2,7 @@ import { BaseAgent } from "@/core/BaseAgent.js";
 import { AgentTool } from "@/core/BaseAgentTool.js";
 import { SkillLoader } from "@/core/SkillLoader.js";
 import { toolRegistery } from "@/tools/registery.js";
+import { log } from "@clack/prompts";
 
 class AgentRegister {
     private static instance: AgentRegister;
@@ -60,6 +61,10 @@ class AgentRegister {
                 let tool = toolRegistery.getToolByName(toolName);
                 if (tool) {
                     return tool;
+                } else {
+                    console.error(
+                        `Skill【${skillName}】依赖的工具【${toolName}】不存在 `,
+                    );
                 }
                 return null;
             })

@@ -1,5 +1,3 @@
-fsSkill
-
 # fsSkill
 
 ## 技能描述
@@ -18,13 +16,13 @@ fsSkill
 
 本技能可使用以下工具来辅助完成文件操作任务：
 
-1. **FsTool** - 文件操作工具（核心工具）
+1. **fsTool** - 文件操作工具（核心工具）
 
 ## 使用说明
 
 当用户需要执行文件操作时，我会根据具体需求选择合适的工具：
 
-- 对于直接的文件操作（如创建、读取、写入文件），使用 **FsTool**
+- 对于直接的文件操作（如创建、读取、写入文件），使用 **fsTool**
 
 ## 动态参数
 
@@ -42,7 +40,7 @@ ${target_path} - 目标路径（用于移动/复制操作） //未实现
 &&&
 用户：请帮我读取 /home/user/document.txt 文件的内容
 
-我会使用 FsTool 读取指定路径的文件内容，并将结果返回给用户。
+我会使用 fsTool 读取指定路径的文件内容，并将结果返回给用户。
 动态参数示例：${file_path} = "/home/user/document.txt"
 &&&
 
@@ -51,7 +49,7 @@ ${target_path} - 目标路径（用于移动/复制操作） //未实现
 &&&
 用户：在 /home/user/ 目录下创建一个名为 notes.txt 的文件
 
-我会使用 FsTool 创建文件，如果需要初始内容，会通过 user_input 询问用户。
+我会使用 fsTool 创建文件，如果需要初始内容，会通过 user_input 询问用户。
 动态参数示例：${file_path} = "/home/user/notes.txt", ${operation_type} = "create"
 &&&
 

@@ -1,0 +1,10 @@
+{
+  "name": "RunCommandSkill",
+  "description": "执行终端命令行的Skill",
+  "tools": [
+    "user_input",
+    "RunCommand"
+  ],
+  "params": [],
+  "status": "ONLINE"
+}

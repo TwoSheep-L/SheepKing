@@ -1,4 +1,5 @@
 import { AgentTool } from "@/core/BaseAgentTool.js";
+import { log } from "@clack/prompts";
 
 class ToolRegistery {
     private static instance: ToolRegistery;
@@ -15,6 +16,7 @@ class ToolRegistery {
 
     public registerTool(tool: AgentTool<any>) {
         this.tools.push(tool);
+        console.log(`[ToolsRegister]已注册工具：${tool.name}`);
     }
 
     public getAllTools(): AgentTool<any>[] {
