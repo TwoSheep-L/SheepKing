@@ -1,0 +1,11 @@
+{
+  "name": "ReactGeneraterSkill",
+  "description": "React生码大师",
+  "tools": [
+    "user_input",
+    "FsTool",
+    "RunCommand"
+  ],
+  "params": [],
+  "status": "ONLINE"
+}

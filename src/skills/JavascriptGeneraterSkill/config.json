@@ -1,0 +1,11 @@
+{
+  "name": "JavascriptGeneraterSkill",
+  "description": "Ts/JS代码大师",
+  "tools": [
+    "user_input",
+    "FsTool",
+    "RunCommand"
+  ],
+  "params": [],
+  "status": "ONLINE"
+}

@@ -65,6 +65,9 @@ export default class CallAgentTool extends AgentTool<CallAgentToolParams> {
                     try {
                         const res = await agent.run(input || "", context || {});
                         let output = res.output;
+                        // 保存
+                        log.message(output || "");
+                        // agent.saveMessage("", `(${agent.name})${session_id}`);
                         return `session_id:${session_id}\n${output}`;
                     } catch (error: any) {
                         return `session_id:${session_id}\n${error.message}`;
@@ -77,7 +80,9 @@ export default class CallAgentTool extends AgentTool<CallAgentToolParams> {
                 try {
                     log.step(`【新对话】(${agent.name})${id}`);
                     let result = await agent.run(input || "");
+                    log.message(result.output || "");
                     agentSessionPool.addAgent(id, agent);
+                    // agent.saveMessage("", `(${agent.name})${id}`); // 保存
                     return `session_id:${id}\n${result.output}`;
                 } catch (error: any) {
                     return `session_id:${id}\n${error.message}`;

@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Skill, SkillConfig } from "./BaseSkill.js";
+import { log } from "@clack/prompts";
 
 export class SkillLoader {
     public skill: Skill;
@@ -45,6 +46,9 @@ export class SkillLoader {
             (field) => !(field in config) || config[field] === "",
         );
         if (missingRequired.length > 0) {
+            log.error(
+                `「${name}」配置文件缺少必填字段: ${missingRequired.join(", ")}`,
+            );
             throw new Error(
                 `「${name}」配置文件缺少必填字段: ${missingRequired.join(", ")}`,
             );
@@ -54,9 +58,7 @@ export class SkillLoader {
         const optionalFields = ["status", "tools", "params"];
         optionalFields.forEach((field) => {
             if (!(field in config)) {
-                console.warn(
-                    `「${name}」配置文件缺少可选字段: ${field}，将使用默认值`,
-                );
+                log.warn(`「${name}」配置文件缺少可选字段: ${field}`);
             }
         });
 

@@ -1,13 +1,5 @@
 import { AgentTool } from "@/core/BaseAgentTool.js";
-import {
-    intro,
-    outro,
-    text,
-    confirm,
-    spinner,
-    multiselect,
-    log,
-} from "@clack/prompts";
+import { intro, outro, text } from "@clack/prompts";
 export default class UserInputTool extends AgentTool {
     constructor() {
         super({
