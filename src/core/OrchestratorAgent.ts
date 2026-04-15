@@ -20,6 +20,7 @@ ${agentList}
 2. 必须严格调用工具 call_agent 指定 agent_name 和 query
 3. 不要回答问题,只负责分配任务
 4. 子Agent返回结果后,你再整理成自然语言回答用户
+5. 调用其他Agent时,需要传入它可能会用到的所有上下文信息,让Agent进行信息提取。
 
 ## call_agent调用规则:
 1. agent_name必须是真实存在的Agent名称
