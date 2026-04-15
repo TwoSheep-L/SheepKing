@@ -1,0 +1,8 @@
+{
+  "name": "VideoGenerateSkill",
+  "description": "一个专业的视频/连续视频生成助手",
+  "tools": [
+    "VideoGeneraterTool"
+  ],
+  "status": "ONLINE"
+}
