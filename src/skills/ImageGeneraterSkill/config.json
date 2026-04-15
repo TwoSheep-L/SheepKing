@@ -4,5 +4,6 @@
   "tools": [
     "ImageGeneraterTool"
   ],
-  "status": "ONLINE"
+  "status": "ONLINE",
+  "param": []
 }
