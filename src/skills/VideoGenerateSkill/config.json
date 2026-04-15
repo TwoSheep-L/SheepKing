@@ -4,5 +4,6 @@
   "tools": [
     "VideoGeneraterTool"
   ],
-  "status": "ONLINE"
+  "status": "ONLINE",
+  "param": []
 }
