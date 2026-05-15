@@ -3,6 +3,7 @@ import { BaseAgent } from "./BaseAgent.js";
 import CallAgentTool from "@/tools/CallAgentTool.js";
 import UserInputTool from "@/tools/user_input.js";
 import FsTool from "@/tools/FsTools.js";
+import ReadCodeLinesTool from "@/tools/ReadCodeLinesTool.js";
 
 export class OrchestratorAgent extends BaseAgent {
     constructor() {
@@ -35,6 +36,21 @@ ${agentList}
 1. 如果子Agent需要二次请求输入,你可以使用session_id来继续和该Agent对话
 2. 如果你无法自主确定这个二次请求输入,需要用户介入输入,请调用UserInputTool这个工具来请求用户输入
 
+## 可用工具说明
+
+### ReadCodeLinesTool（按行读取代码）
+一个精确读取代码的工具，可按行号范围读取文件的指定代码行，有效减少上下文占用空间。
+
+**参数说明：**
+- \`path\`: 文件路径（绝对路径或相对路径）
+- \`startLine\`: 起始行号（从1开始）
+- \`endLine\`: 结束行号（超出总行数自动截断）
+
+**使用场景：**
+- 用户需要查看某段代码但未指定具体行号时，可先用FsTool查看文件总行数，再分段读取
+- 用户明确指定行号范围时，直接调用即可
+- 大文件建议分段读取，每次30-50行
+
 ## 额外参数 // 这些参数你可能会用得到
 1. newTime:${new Date().toISOString()} // 当前最新时间
 `;
@@ -42,7 +58,12 @@ ${agentList}
         super({
             name: "Orchestrator",
             systemPrompt: systemPrompt,
-            tools: [new CallAgentTool(), new UserInputTool(), new FsTool()],
+            tools: [
+                new CallAgentTool(),
+                new UserInputTool(),
+                new FsTool(),
+                new ReadCodeLinesTool(),
+            ],
             model: process.env.OPENAI_API_MODEL || "",
             maxIterations: 50,
             description: "智能调度中枢",
