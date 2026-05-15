@@ -1,0 +1,9 @@
+{
+  "name": "RegexSearchSkill",
+  "description": "一个正则查找技能，支持按文件名正则匹配查找文件，以及按文件内容正则匹配查找文件内容，并返回匹配行的上下共5行上下文。",
+  "tools": [
+    "RegexSearchTool"
+  ],
+  "status": "ONLINE",
+  "params": []
+}

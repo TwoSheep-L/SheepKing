@@ -3,7 +3,8 @@
   "description": "执行终端命令行的Skill",
   "tools": [
     "user_input",
-    "RunCommand"
+    "RunCommand",
+    "RegexSearchTool"
   ],
   "params": [],
   "status": "ONLINE"

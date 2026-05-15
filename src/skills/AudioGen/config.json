@@ -1,0 +1,9 @@
+{
+  "name": "AudioGen",
+  "description": "一个文本生成语音的skill",
+  "tools": [
+    "AudioData"
+  ],
+  "status": "ONLINE",
+  "params": []
+}

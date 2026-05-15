@@ -1,0 +1,9 @@
+{
+  "name": "ReadCodeSkill",
+  "description": "一个智能代码读取技能，能够按行号范围精确读取文件的指定代码行，有效减少上下文占用空间。避免一次性读取整个大文件。",
+  "tools": [
+    "ReadCodeLinesTool"
+  ],
+  "status": "ONLINE",
+  "params": []
+}

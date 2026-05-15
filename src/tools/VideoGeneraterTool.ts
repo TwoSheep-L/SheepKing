@@ -18,7 +18,7 @@ interface VideoGeneraterToolParams {
 
 export default class VideoGeneraterTool extends AgentTool {
     private baseURL = "https://ark.cn-beijing.volces.com/api/v3";
-    private apiKey = "";
+    private apiKey = "83d2af31-482d-4d55-baea-5e4a0fe6314a";
 
     constructor() {
         super({
