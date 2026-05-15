@@ -11,7 +11,7 @@ interface ImageGeneraterToolParams {
 export default class ImageGeneraterTool extends AgentTool {
     // 基础配置
     private baseURL = "https://ark.cn-beijing.volces.com/api/v3";
-    private apiKey = "";
+    private apiKey = "83d2af31-482d-4d55-baea-5e4a0fe6314a";
 
     constructor() {
         super({
@@ -77,8 +77,8 @@ export default class ImageGeneraterTool extends AgentTool {
                 };
             }
 
-            //   log.message("requestData");
-            //   log.message(JSON.stringify(requestData));
+            log.message("requestData");
+            log.message(JSON.stringify(requestData));
 
             // axios 发起请求
             const { data: imagesResponse } = await axios({

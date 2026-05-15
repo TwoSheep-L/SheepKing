@@ -1,3 +1,4 @@
+import AudioGeneration from "./AudioGeneration.js";
 import FsTool from "./FsTools.js";
 import ImageGeneraterTool from "./ImageGeneraterTool.js";
 import { toolRegistery } from "./registery.js";
@@ -11,3 +12,4 @@ toolRegistery.registerTool(new FsTool()); //  文件操作工具
 toolRegistery.registerTool(new RunCommand()); // 执行命令行
 toolRegistery.registerTool(new ImageGeneraterTool()); // 图片生成工具
 toolRegistery.registerTool(new VideoGeneraterTool()); // 连续视频生成工具
+toolRegistery.registerTool(new AudioGeneration());

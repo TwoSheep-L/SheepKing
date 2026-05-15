@@ -2,6 +2,7 @@ import { agentRegistery } from "@/skills/index.js";
 import { BaseAgent } from "./BaseAgent.js";
 import CallAgentTool from "@/tools/CallAgentTool.js";
 import UserInputTool from "@/tools/user_input.js";
+import FsTool from "@/tools/FsTools.js";
 
 export class OrchestratorAgent extends BaseAgent {
     constructor() {
@@ -21,6 +22,7 @@ ${agentList}
 3. 不要回答问题,只负责分配任务
 4. 子Agent返回结果后,你再整理成自然语言回答用户
 5. 调用其他Agent时,需要传入它可能会用到的所有上下文信息,让Agent进行信息提取。
+6. 在简单读取文件的情况下,可以使用FsTool工具来读取和检查文件,仅限简单使用,复杂情况交给FsToolAgent
 
 ## call_agent调用规则:
 1. agent_name必须是真实存在的Agent名称
@@ -40,7 +42,7 @@ ${agentList}
         super({
             name: "Orchestrator",
             systemPrompt: systemPrompt,
-            tools: [new CallAgentTool(), new UserInputTool()],
+            tools: [new CallAgentTool(), new UserInputTool(), new FsTool()],
             model: process.env.OPENAI_API_MODEL || "",
             maxIterations: 50,
             description: "智能调度中枢",
