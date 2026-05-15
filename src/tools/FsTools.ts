@@ -7,6 +7,7 @@ interface IFsToolParams {
     path: string;
     action: string;
     content: string;
+    lineNumber?: number;
 }
 
 interface TreeNode {
@@ -96,7 +97,7 @@ export default class FsTool extends AgentTool<IFsToolParams> {
                     name: "action",
                     type: "string",
                     description:
-                        "操作类型 write, read, delete, exists, dir, mkdir, list, listDir, delete, treeList",
+                        "操作类型 write, read, delete, exists, dir, mkdir, list, listDir, delete, treeList, insertLine",
                     required: true,
                 },
                 {
@@ -105,12 +106,18 @@ export default class FsTool extends AgentTool<IFsToolParams> {
                     description: "文件内容",
                     required: false,
                 },
+                {
+                    name: "lineNumber",
+                    type: "number",
+                    description: "行号，用于 insertLine 操作",
+                    required: false,
+                },
             ],
         });
     }
 
     async execute(params: IFsToolParams): Promise<string> {
-        const { path: filePath, action, content } = params;
+        const { path: filePath, action, content, lineNumber } = params;
         log.info(`执行文件操作工具 [${action}]${filePath}`);
 
         if (action === "write") {
@@ -179,6 +186,26 @@ export default class FsTool extends AgentTool<IFsToolParams> {
                 }
                 return "文件删除成功";
             }
+        }
+
+        if (action === "insertLine") {
+            const fileContent = fs.readFileSync(filePath, "utf-8");
+            const lines = fileContent.split("\n");
+            const targetLine = lineNumber ?? lines.length + 1;
+
+            if (targetLine < 1) {
+                // 行号小于1，在开头插入
+                lines.unshift(content);
+            } else if (targetLine > lines.length) {
+                // 行号大于文件总行数，在末尾追加
+                lines.push(content);
+            } else {
+                // 在指定行之前插入（原第N行变为第N+1行）
+                lines.splice(targetLine - 1, 0, content);
+            }
+
+            fs.writeFileSync(filePath, lines.join("\n"));
+            return "行插入成功";
         }
 
         return "";
