@@ -5,7 +5,8 @@
     "user_input",
     "FsTool",
     "RunCommand",
-    "ReadCodeLinesTool"
+    "ReadCodeLinesTool",
+    "RegexSearchTool"
   ],
   "params": [],
   "status": "ONLINE"

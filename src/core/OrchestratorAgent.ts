@@ -4,6 +4,7 @@ import CallAgentTool from "@/tools/CallAgentTool.js";
 import UserInputTool from "@/tools/user_input.js";
 import FsTool from "@/tools/FsTools.js";
 import ReadCodeLinesTool from "@/tools/ReadCodeLinesTool.js";
+import RegexSearchTool from "@/tools/RegexSearchTool.js";
 
 export class OrchestratorAgent extends BaseAgent {
     constructor() {
@@ -63,6 +64,7 @@ ${agentList}
                 new UserInputTool(),
                 new FsTool(),
                 new ReadCodeLinesTool(),
+                new RegexSearchTool(),
             ],
             model: process.env.OPENAI_API_MODEL || "",
             maxIterations: 50,
