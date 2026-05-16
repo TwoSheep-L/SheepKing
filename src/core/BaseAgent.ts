@@ -94,7 +94,17 @@ export class BaseAgent {
                     (tool) => tool.name === toolCall.function.name,
                 );
                 if (!tool) {
-                    console.log("no tool");
+                    // 🐛 Bug修复: 不能直接continue跳过！必须为每个tool_call_id添加对应的tool响应消息，
+                    // 否则消息序列中assistant的tool_calls与后续tool消息数量不匹配，OpenAI会报错：
+                    // "An assistant message with 'tool_calls' must be followed by tool messages
+                    //  responding to each 'tool_call_id'."
+                    // 这里改为返回错误提示，确保每个tool_call都有对应的响应
+                    console.log(`tool "${toolCall.function.name}" not found, returning error response`);
+                    this.message.addMessage({
+                        role: "tool",
+                        content: `错误: 工具 "${toolCall.function.name}" 不存在，请检查工具名称是否正确`,
+                        tool_call_id: toolCall.id,
+                    });
                     continue;
                 }
                 const arguMents = JSON.parse(toolCall.function.arguments);

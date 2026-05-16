@@ -1,0 +1,9 @@
+{
+  "name": "Generate2SMapSkill",
+  "description": "一个项目路径映射文件生成技能，能够检查并生成2S.md文件，遍历当前项目结构，将重要路径按格式写入2S.md文件中。",
+  "tools": [
+    "FsTool"
+  ],
+  "status": "ONLINE",
+  "params": []
+}

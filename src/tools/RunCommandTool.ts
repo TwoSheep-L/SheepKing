@@ -4,7 +4,8 @@ import { exec } from "child_process";
 
 interface RunCommandParams {
     command: string;
-    cmd?: string;
+    /** 执行命令的工作目录（对应参数 schema 中的 cwd） */
+    cwd?: string;
     isAsync?: boolean;
 }
 
@@ -71,21 +72,21 @@ export default class RunCommand extends AgentTool<RunCommandParams> {
 
     async execute({
         command,
-        cmd = "",
+        cwd = "",
         isAsync,
     }: RunCommandParams): Promise<string> {
-        log.warn(`${isAsync ? "异步" : ""}执行命令 ${cmd}:${command}`);
+        log.warn(`${isAsync ? "异步" : ""}执行命令 [${cwd || "默认目录"}]: ${command}`);
         if (!isAsync) {
             let res: string = "";
             try {
-                res = (await runCommand(command, cmd)) as string;
-                return `执行命令"${cmd}: ${command}"成功: ${res}`;
+                res = (await runCommand(command, cwd)) as string;
+                return `执行命令成功: ${res}`;
             } catch (error) {
-                return `执行命令"${cmd}: ${command}"失败: ${error}`;
+                return `执行命令失败: ${error}`;
             }
         }
 
-        runCommandAsync(command, cmd);
-        return `开始异步执行命令"${cmd}: ${command}"`;
+        runCommandAsync(command, cwd);
+        return `开始异步执行命令"${command}" (工作目录: ${cwd || "默认"})`;
     }
 }
