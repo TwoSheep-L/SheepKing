@@ -378,7 +378,7 @@ function getHTMLPage(): string {
     h += "<style>";
     h += "*{margin:0;padding:0;box-sizing:border-box}";
 
-    // ====== CSS 变量定义：5个浅色系主题 ======
+    // ====== CSS 变量定义：6个浅色系主题 ======
     h += "/* Light (浅色默认) */";
     h += '[data-theme="light"]{';
     h += "--bg-primary:#f5f5f5;";
@@ -519,6 +519,34 @@ function getHTMLPage(): string {
     h += "--theme-dot-color:#9575cd;";
     h += "}";
 
+    h += "/* Light Yellow (淡黄色) */";
+    h += '[data-theme="light-yellow"]{';
+    h += "--bg-primary:#fef9e7;";
+    h += "--bg-secondary:#ffffff;";
+    h += "--bg-tertiary:#fdf2d6;";
+    h += "--text-primary:#5a4a2a;";
+    h += "--text-secondary:#9a7a4a;";
+    h += "--text-tertiary:#baaa7a;";
+    h += "--border-color:#f0e0b0;";
+    h += "--accent-blue:#d4a843;";
+    h += "--accent-green:#e6c76a;";
+    h += "--msg-user-bg:linear-gradient(135deg,#d4a843,#f0d68a);";
+    h += "--msg-ai-bg:#ffffff;";
+    h += "--msg-ai-border:#f0e0b0;";
+    h += "--header-bg:linear-gradient(135deg,#fef5e7,#fdebd0);";
+    h += "--input-bg:#ffffff;";
+    h += "--title-gradient:linear-gradient(90deg,#d4a843,#e6c76a);";
+    h += "--status-dot:#e6c76a;";
+    h += "--log-level-warn:#d29922;";
+    h += "--log-level-error:#f85149;";
+    h += "--modal-overlay:rgba(0,0,0,0.3);";
+    h += "--modal-shadow:0 20px 60px rgba(0,0,0,0.1);";
+    h += "--scrollbar-thumb:#f0e0b0;";
+    h += "--scrollbar-thumb-hover:#e6c76a;";
+    h += "--btn-hover-shadow:0 4px 12px rgba(212,168,67,0.4);";
+    h += "--theme-dot-color:#d4a843;";
+    h += "}";
+
     // ====== 平滑过渡 ======
     h += "html{transition:background-color 0.3s ease}";
     h += "body{transition:background-color 0.3s ease,color 0.3s ease}";
@@ -557,6 +585,8 @@ function getHTMLPage(): string {
         '.theme-dot[data-theme="light-pink"]{background:#f48fb1}';
     h +=
         '.theme-dot[data-theme="light-blue"]{background:#64b5f6}';
+    h +=
+        '.theme-dot[data-theme="light-yellow"]{background:#e6c76a}';
     h +=
         '.theme-dot[data-theme="light-purple"]{background:#b39ddb}';
     h +=
@@ -683,6 +713,8 @@ function getHTMLPage(): string {
         '<span class="theme-dot" data-theme="light-pink" onclick="setTheme(\'light-pink\')" title="\u6D45\u7C89\u8272"><span class="tooltip">\u6D45\u7C89\u8272</span></span>';
     h +=
         '<span class="theme-dot" data-theme="light-blue" onclick="setTheme(\'light-blue\')" title="\u6D45\u84DD\u8272"><span class="tooltip">\u6D45\u84DD\u8272</span></span>';
+    h +=
+        '<span class="theme-dot" data-theme="light-yellow" onclick="setTheme(\'light-yellow\')" title="\u6D45\u9EC4\u8272"><span class="tooltip">\u6D45\u9EC4\u8272</span></span>';
     h +=
         '<span class="theme-dot" data-theme="light-purple" onclick="setTheme(\'light-purple\')" title="\u6D45\u7D2B\u8272"><span class="tooltip">\u6D45\u7D2B\u8272</span></span>';
     h += "</div>";
