@@ -7,10 +7,12 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "dev:once": "tsx src/main.ts",
+    "dev:code": "tsx src/main-code.ts",
     "build": "tsc",
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit",
-    "create-skill": "tsx src/CreateSkillRun.js"
+    "create-skill": "tsx src/CreateSkillRun.js",
+    "chat": "tsx chat-server.ts"
   },
   "keywords": [],
   "author": "",
