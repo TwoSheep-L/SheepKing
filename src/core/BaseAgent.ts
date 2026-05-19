@@ -20,6 +20,24 @@ export interface AgentConfig {
     params?: { [key: string]: string };
 }
 
+/**
+ * 将错误对象格式化为详细的错误信息字符串，
+ * 包含 code/cmd/stack 等，让上层 AI Agent 能获取完整错误上下文。
+ */
+function formatAgentError(error: unknown): string {
+    if (error instanceof Error) {
+        const lines: string[] = [`工具执行异常: ${error.message}`];
+        const err = error as any;
+        if (err.code !== undefined) lines.push(`错误码: ${err.code}`);
+        if (err.cmd) lines.push(`命令: ${err.cmd}`);
+        if (err.stderr) lines.push(`stderr: ${err.stderr}`);
+        if (err.stdout) lines.push(`stdout: ${err.stdout}`);
+        if (err.stack) lines.push(`堆栈:\n${err.stack}`);
+        return lines.join("\n");
+    }
+    return `工具执行异常: ${String(error)}`;
+}
+
 export class BaseAgent {
     name: string;
     systemPrompt: string;
@@ -112,8 +130,10 @@ export class BaseAgent {
                 try {
                     toolResult = await tool.execute(arguMents);
                 } catch (error: any) {
-                    toolResult = error.message;
-                    log.error("Tool error");
+                    // 🐛 修复: 将完整的错误信息（含堆栈、code、cmd等）返回给Agent，
+                    // 而不是只取 error.message，让 AI 能根据详细错误做出正确决策
+                    toolResult = formatAgentError(error);
+                    log.error(`工具 "${tool.name}" 执行异常，已捕获并返回给 Agent`);
                 }
 
                 this.message.addMessage({

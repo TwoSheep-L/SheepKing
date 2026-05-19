@@ -296,7 +296,8 @@ const server = http.createServer(async (req, res) => {
                         }),
                     );
                 } catch (err: any) {
-                    console.error("❌ Chat API 错误:", err.message);
+                    const errMsg = err instanceof Error ? `${err.message}\n${err.stack || ''}` : String(err);
+                    console.error("❌ Chat API 错误:", errMsg);
                     res.writeHead(500, { "Content-Type": "application/json" });
                     res.end(JSON.stringify({ error: err.message }));
                 }
@@ -328,6 +329,7 @@ const server = http.createServer(async (req, res) => {
                         );
                     }
                 } catch (err: any) {
+                    console.error("❌ User Input API 错误:", err instanceof Error ? err.message : String(err));
                     res.writeHead(400, { "Content-Type": "application/json" });
                     res.end(JSON.stringify({ error: err.message }));
                 }
@@ -346,7 +348,8 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(404, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Not Found" }));
     } catch (err: any) {
-        console.error("❌ 服务器错误:", err.message);
+        const errMsg = err instanceof Error ? `${err.message}\n${err.stack || ''}` : String(err);
+        console.error("❌ 服务器错误:", errMsg);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: err.message }));
     }

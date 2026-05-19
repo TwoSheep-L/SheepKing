@@ -11,6 +11,21 @@ interface CallAgentToolParams {
     session_id?: string;
 }
 
+/**
+ * 将错误对象格式化为详细的错误信息字符串，
+ * 包含完整堆栈等，让上层 AI Agent 能获取完整错误上下文。
+ */
+function formatAgentError(error: unknown): string {
+    if (error instanceof Error) {
+        const lines: string[] = [`调用子Agent异常: ${error.message}`];
+        const err = error as any;
+        if (err.code !== undefined) lines.push(`错误码: ${err.code}`);
+        if (err.stack) lines.push(`堆栈:\n${err.stack}`);
+        return lines.join("\n");
+    }
+    return `调用子Agent异常: ${String(error)}`;
+}
+
 export default class CallAgentTool extends AgentTool<CallAgentToolParams> {
     constructor() {
         super({
@@ -65,12 +80,13 @@ export default class CallAgentTool extends AgentTool<CallAgentToolParams> {
                     try {
                         const res = await agent.run(input || "", context || {});
                         let output = res.output;
-                        // 保存
                         log.message(output || "");
-                        // agent.saveMessage("", `(${agent.name})${session_id}`);
                         return `session_id:${session_id}\n${output}`;
                     } catch (error: any) {
-                        return `session_id:${session_id}\n${error.message}`;
+                        // 🐛 修复: 将完整的错误信息返回给上层 Agent，而不是只取 message
+                        const errDetail = formatAgentError(error);
+                        log.error(`子Agent "${agent.name}" 运行异常，已捕获并返回`);
+                        return `session_id:${session_id}\n${errDetail}`;
                     }
                 }
             } else {
@@ -82,10 +98,12 @@ export default class CallAgentTool extends AgentTool<CallAgentToolParams> {
                     let result = await agent.run(input || "");
                     log.message(result.output || "");
                     agentSessionPool.addAgent(id, agent);
-                    // agent.saveMessage("", `(${agent.name})${id}`); // 保存
                     return `session_id:${id}\n${result.output}`;
                 } catch (error: any) {
-                    return `session_id:${id}\n${error.message}`;
+                    // 🐛 修复: 将完整的错误信息返回给上层 Agent
+                    const errDetail = formatAgentError(error);
+                    log.error(`子Agent "${agent.name}" 运行异常，已捕获并返回`);
+                    return `session_id:${id}\n${errDetail}`;
                 }
             }
             return "";
