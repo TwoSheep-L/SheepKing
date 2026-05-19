@@ -49,49 +49,75 @@ const _log = console.log.bind(console);
 const _error = console.error.bind(console);
 const _warn = console.warn.bind(console);
 
-/** 重写 console.log：终端输出 + SSE 广播 */
+
+/** 判断参数是否为 @clack/prompts 的 symbol 对象（包含 ANSI 颜色码的符号） */
+function isClackSymbolArg(arg: unknown): boolean {
+    return (
+        typeof arg === "object" &&
+        arg !== null &&
+        "symbol" in arg &&
+        Object.keys(arg).length === 1
+    );
+}
+
+/** 过滤掉 @clack/prompts 的 symbol 参数，只保留有效文本参数（用于SSE广播） */
+function filterClackArgs(args: unknown[]): unknown[] {
+    return args.filter((a) => !isClackSymbolArg(a));
+}
+
+
+/** 重写 console.log：终端输出 + SSE 广播（过滤 @clack/prompts 的 symbol 对象） */
 console.log = function (...args: unknown[]) {
-    const message = args
+    const filteredArgs = filterClackArgs(args);
+    const message = filteredArgs
         .map((a) =>
             typeof a === "object" ? JSON.stringify(a, null, 2) : String(a),
         )
         .join(" ");
-    _log(...args);
-    broadcastSSE("console", {
-        level: "log",
-        message,
-        timestamp: new Date().toISOString(),
-    });
+    _log(...args); // 终端保持原样输出（含颜色）
+    if (filteredArgs.length > 0) {
+        broadcastSSE("console", {
+            level: "log",
+            message,
+            timestamp: new Date().toISOString(),
+        });
+    }
 };
 
 /** 重写 console.error */
 console.error = function (...args: unknown[]) {
-    const message = args
+    const filteredArgs = filterClackArgs(args);
+    const message = filteredArgs
         .map((a) =>
             typeof a === "object" ? JSON.stringify(a, null, 2) : String(a),
         )
         .join(" ");
     _error(...args);
-    broadcastSSE("console", {
-        level: "error",
-        message,
-        timestamp: new Date().toISOString(),
-    });
+    if (filteredArgs.length > 0) {
+        broadcastSSE("console", {
+            level: "error",
+            message,
+            timestamp: new Date().toISOString(),
+        });
+    }
 };
 
 /** 重写 console.warn */
 console.warn = function (...args: unknown[]) {
-    const message = args
+    const filteredArgs = filterClackArgs(args);
+    const message = filteredArgs
         .map((a) =>
             typeof a === "object" ? JSON.stringify(a, null, 2) : String(a),
         )
         .join(" ");
     _warn(...args);
-    broadcastSSE("console", {
-        level: "warn",
-        message,
-        timestamp: new Date().toISOString(),
-    });
+    if (filteredArgs.length > 0) {
+        broadcastSSE("console", {
+            level: "warn",
+            message,
+            timestamp: new Date().toISOString(),
+        });
+    }
 };
 
 
@@ -124,17 +150,20 @@ for (const [method, level] of Object.entries(clackLogLevelMap)) {
         (clackLog as any)[method] = function (...args: unknown[]) {
             // ① 先调原始方法（终端正常输出，带颜色高亮）
             original.apply(clackLog, args);
-            // ② 再通过 console 广播到前端（自动去除 ANSI 颜色码）
-            const message = args
-                .map((a) =>
-                    stripAnsi(
-                        typeof a === "object"
-                            ? JSON.stringify(a, null, 2)
-                            : String(a),
-                    ),
-                )
-                .join(" ");
-            console[level](`[Tool] ${message}`);
+            // ② 提取有效文本参数（过滤掉 symbol 对象），通过 console 广播到前端
+            const textArgs = filterClackArgs(args);
+            if (textArgs.length > 0) {
+                const message = textArgs
+                    .map((a) =>
+                        stripAnsi(
+                            typeof a === "object"
+                                ? JSON.stringify(a, null, 2)
+                                : String(a),
+                        ),
+                    )
+                    .join(" ");
+                console[level](`[Tool] ${message}`);
+            }
         };
     }
 }
