@@ -1,0 +1,9 @@
+{
+  "name": "WordDocumentSkill",
+  "description": "一个功能全面的Word文档生成技能，能够创建和读取.docx格式的文档。支持丰富的文本格式（字体、字号、颜色、加粗、斜体、下划线、对齐方式）、表格（含合并单元格、表头样式）、图片插入、列表、分页符、页眉页脚、页面设置（边距/纸张大小/方向）等专业排版功能。",
+  "tools": [
+    "WordDocumentTool"
+  ],
+  "status": "ONLINE",
+  "params": []
+}

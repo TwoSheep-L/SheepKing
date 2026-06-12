@@ -1,0 +1,201 @@
+/**
+ * 🐑 DiffView 样式
+ * GitHub 风格的代码差异展示
+ */
+
+.container {
+  margin: 8px 0;
+  border: 1px solid var(--diff-border, #d0d7de);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---- 文件头 ---- */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--diff-header-bg, #f6f8fa);
+  border-bottom: 1px solid var(--diff-border, #d0d7de);
+  font-size: 14px;
+}
+
+.fileIcon {
+  flex-shrink: 0;
+}
+
+.filePath {
+  font-weight: 600;
+  color: var(--diff-file-color, #24292f);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.action {
+  font-size: 12px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--diff-action-bg, #e8eaed);
+  color: var(--diff-action-color, #57606a);
+  flex-shrink: 0;
+}
+
+.stats {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.additions {
+  color: var(--diff-add-text, #1a7f37);
+}
+
+.deletions {
+  color: var(--diff-del-text, #cf222e);
+}
+
+/* ---- Diff 内容 ---- */
+.diffContent {
+  overflow-x: auto;
+}
+
+.block {
+  /* 分组容器 */
+}
+
+/* ---- 单行 ---- */
+.line {
+  display: flex;
+  align-items: stretch;
+  min-height: 22px;
+  padding: 0;
+}
+
+/* 行号区域 */
+.lineNum {
+  display: flex;
+  width: 80px;
+  flex-shrink: 0;
+  user-select: none;
+  text-align: right;
+}
+
+.oldNum,
+.newNum {
+  display: inline-block;
+  width: 40px;
+  padding: 0 8px;
+  color: var(--diff-line-num-color, #6e7781);
+  font-size: 12px;
+  line-height: 22px;
+}
+
+/* 变更标记（+/-/空格） */
+.marker {
+  width: 20px;
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 22px;
+  font-weight: 600;
+  color: var(--diff-marker-color, #57606a);
+}
+
+/* 代码内容 */
+.content {
+  flex: 1;
+  padding: 0 8px;
+  line-height: 22px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: hidden;
+}
+
+/* ---- 行类型颜色 ---- */
+/* 正常行（未变动） */
+.line.normal {
+  background: var(--diff-normal-bg, #ffffff);
+}
+
+.line.normal .marker {
+  color: transparent;
+}
+
+/* 新增行 🟢 */
+.line.add {
+  background: var(--diff-add-bg, #dafbe1);
+}
+
+.line.add .marker {
+  color: var(--diff-add-text, #1a7f37);
+}
+
+.block.add {
+  background: var(--diff-add-bg, #dafbe1);
+}
+
+/* 删除行 🔴 */
+.line.del {
+  background: var(--diff-del-bg, #ffebe9);
+}
+
+.line.del .marker {
+  color: var(--diff-del-text, #cf222e);
+}
+
+.block.del {
+  background: var(--diff-del-bg, #ffebe9);
+}
+
+/* ---- 主题变量（跟随系统主题） ---- */
+[data-theme='light'] {
+  --diff-border: #d0d7de;
+  --diff-header-bg: #f6f8fa;
+  --diff-file-color: #24292f;
+  --diff-action-bg: #e8eaed;
+  --diff-action-color: #57606a;
+  --diff-add-text: #1a7f37;
+  --diff-del-text: #cf222e;
+  --diff-line-num-color: #6e7781;
+  --diff-marker-color: #57606a;
+  --diff-normal-bg: #ffffff;
+  --diff-add-bg: #dafbe1;
+  --diff-del-bg: #ffebe9;
+}
+
+[data-theme='light-green'] {
+  --diff-border: #d0d7de;
+  --diff-header-bg: #f0faf0;
+  --diff-file-color: #24292f;
+  --diff-action-bg: #dcedd9;
+  --diff-action-color: #3d7a3d;
+  --diff-add-text: #1a7f37;
+  --diff-del-text: #cf222e;
+  --diff-line-num-color: #6e7781;
+  --diff-marker-color: #57606a;
+  --diff-normal-bg: #ffffff;
+  --diff-add-bg: #dafbe1;
+  --diff-del-bg: #ffebe9;
+}
+
+[data-theme='light-pink'] {
+  --diff-border: #e0d0de;
+  --diff-header-bg: #fdf0f6;
+  --diff-file-color: #24292f;
+  --diff-action-bg: #f0dce8;
+  --diff-action-color: #8a5a7a;
+  --diff-add-text: #1a7f37;
+  --diff-del-text: #cf222e;
+  --diff-line-num-color: #6e7781;
+  --diff-marker-color: #57606a;
+  --diff-normal-bg: #ffffff;
+  --diff-add-bg: #dafbe1;
+  --diff-del-bg: #ffebe9;
+}

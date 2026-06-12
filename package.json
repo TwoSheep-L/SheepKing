@@ -12,7 +12,11 @@
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit",
     "create-skill": "tsx src/CreateSkillRun.js",
-    "chat": "tsx chat-server.ts"
+
+    "build:webChat": "cd webChat && npx vite build",
+    "webChat:dev": "cd webChat && npm run dev",
+    "webChat:serve": "npx tsx webChat/server/index.ts",
+    "webChat:start": "npm run build:webChat && npm run webChat:serve"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +24,10 @@
   "dependencies": {
     "@clack/prompts": "^1.2.0",
     "axios": "^1.15.0",
+    "cheerio": "^1.2.0",
+    "docx": "^9.7.1",
     "dotenv": "^17.4.1",
+    "mammoth": "^1.12.0",
     "openai": "^4.77.3",
     "uuid": "^13.0.0"
   },

@@ -1,0 +1,10 @@
+{
+  "name": "sheepking-chat-server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx tsx watch index.ts",
+    "start": "npx tsx index.ts"
+  }
+}
