@@ -1,4 +1,4 @@
-import { ChatCompletionMessageParam } from "openai/resources.mjs";
+import { ChatCompletionMessageParam } from "openai/resources";
 
 export default class BaseMessage {
     public messages: ChatCompletionMessageParam[] = [];
@@ -23,7 +23,7 @@ export default class BaseMessage {
         this.messages[0] = { role: "system", content: systemPrompt };
     }
 
-    //在SystemPrompt中注入Context
+    // 在SystemPrompt中注入Context
     injectContext(context: {
         [key: string]: string;
     }): ChatCompletionMessageParam[] {
@@ -35,5 +35,14 @@ export default class BaseMessage {
         }
         this.messages[0].content = systemPrompt;
         return this.messages;
+    }
+
+    /**
+     * 重置对话上下文：清空所有消息，仅保留 systemPrompt
+     * 用于"重置"功能，让 Agent 恢复到首次启动时的状态
+     */
+    reset() {
+        const systemPrompt = (this.messages[0]?.content || "") as string;
+        this.messages = [{ role: "system", content: systemPrompt }];
     }
 }

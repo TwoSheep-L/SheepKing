@@ -85,15 +85,22 @@ function formatTree(
 /**
  * 尝试广播文件 diff 到前端（通过全局 broadcastDiff 函数）
  * 仅在 webChat server 环境下有效，CLI 模式下静默跳过
+ * 增加了调试日志，便于排查广播未生效的问题
  */
 function tryBroadcastDiff(diffData: Record<string, unknown>): void {
     try {
         const broadcastFn = (global as any).__broadcastDiff;
         if (typeof broadcastFn === 'function') {
             broadcastFn(diffData);
+            // 注意：此处的 log 会通过 @clack/prompts 拦截，以 [Tool] 前缀显示在前端控制台
+            // 真正的 file_diff SSE 事件由 __broadcastDiff 内的 broadcastSSE 发送
+        } else {
+            // CLI 模式下没有 broadcastDiff 是正常行为，但记录一条调试信息
+            console.log("[FsTool] __broadcastDiff 未定义（CLI 模式），跳过 SSE 广播");
         }
-    } catch {
-        // CLI 模式下没有 broadcastDiff，静默跳过
+    } catch (err) {
+        // 即使是 server 模式，也要捕获错误避免影响文件操作
+        console.error("[FsTool] broadcastDiff 调用失败:", err instanceof Error ? err.message : String(err));
     }
 }
 
@@ -167,10 +174,10 @@ export default class FsTool extends AgentTool<IFsToolParams> {
                 !fileExists
             );
 
-            // 通过 console.log 输出 diff 摘要（CLI 模式下可见）
+            // 通过 console.log 输出 diff 摘要（CLI 模式下可见，同时会在控制台面板展示）
             log.info(`📊 文件变更: +${diff.additions} / -${diff.deletions} 行`);
 
-            // 广播 diff 到前端（SSE）
+            // 广播 diff 到前端（SSE）- 前端 ChatPanel 会收到并展示 DiffView
             tryBroadcastDiff(formatDiffForSSE(diff));
 
             // 返回结果（包含 diff 文本，让 AI 也能感知到变更）

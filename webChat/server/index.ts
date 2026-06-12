@@ -457,6 +457,25 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // ====== Reset API：重置对话上下文（清空历史，保留 systemPrompt）======
+    if (pathname === '/api/reset' && req.method === 'POST') {
+      try {
+        // 重置 Agent 的对话历史，仅保留 systemPrompt
+        agent.message.reset();
+        _log('🔄 [Reset] 对话上下文已重置，已清空所有历史消息，systemPrompt 已保留');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: '上下文已重置' }));
+      } catch (err: any) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        _error('❌ Reset API 错误:', errMsg);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: errMsg }));
+      }
+      return;
+    }
+
+
+
     // ====== 健康检查 ======
     if (pathname === '/api/health' && req.method === 'GET') {
       res.writeHead(200, { 'Content-Type': 'application/json' });

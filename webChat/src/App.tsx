@@ -10,6 +10,7 @@
  * 6. 文件 diff 实时展示（GitHub 风格代码变更）
  * 7. 6 个浅色系主题切换
  * 8. 控制台日志实时面板
+ * 9. 🔄 重置对话上下文（清空历史，保留 systemPrompt）
  */
 
 import { useState, useCallback } from 'react';
@@ -28,8 +29,8 @@ export default function App() {
   // ---- 主题 ----
   const { theme, setTheme, themes } = useTheme();
 
-  // ---- 聊天（含 diff 消息支持）----
-  const { messages, isLoading, sendMessage, replyToAsk, addDiffMessage } = useChat();
+  // ---- 聊天（含 diff 消息支持 + 重置功能）----
+  const { messages, isLoading, sendMessage, replyToAsk, addDiffMessage, resetChat } = useChat();
 
   // ---- 控制台日志 ----
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -130,6 +131,7 @@ export default function App() {
           messages={messages}
           isLoading={isLoading}
           onSend={sendMessage}
+          onReset={resetChat}  /* 🔄 传递重置功能 */
         />
         <ConsolePanel logs={logs} onClear={clearLogs} />
       </div>
