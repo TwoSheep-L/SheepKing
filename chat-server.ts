@@ -723,7 +723,18 @@ function getHTMLPage(): string {
     h += "::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-thumb-hover)}";
     h +=
         "@media(max-width:768px){.main-container{flex-direction:column}.console-panel{width:100%;height:40vh;border-top:1px solid var(--border-color)}.chat-panel{height:60vh}}";
+    h += ".message.ai .markdown-body hr{border:none;border-top:1px solid var(--border-color);margin:12px 0}.message.ai .markdown-body img{max-width:100%;border-radius:8px;margin:8px 0}.message.ai .markdown-body strong{font-weight:600}";
+    h += ".message.ai .markdown-body a{color:var(--accent-blue);text-decoration:none}.message.ai .markdown-body a:hover{text-decoration:underline}";
+    h += ".message.ai .markdown-body table{border-collapse:collapse;margin:8px 0;width:100%;font-size:13px}.message.ai .markdown-body th,.message.ai .markdown-body td{border:1px solid var(--border-color);padding:6px 10px;text-align:left}.message.ai .markdown-body th{background:var(--bg-tertiary);font-weight:600}";
+    h += ".message.ai .markdown-body blockquote{border-left:3px solid var(--accent-blue);margin:8px 0;padding:4px 12px;color:var(--text-secondary);background:var(--bg-tertiary);border-radius:0 4px 4px 0}";
+    h += ".message.ai .markdown-body h1,.message.ai .markdown-body h2,.message.ai .markdown-body h3,.message.ai .markdown-body h4{margin:12px 0 6px;font-weight:600}.message.ai .markdown-body h1{font-size:18px}.message.ai .markdown-body h2{font-size:16px}.message.ai .markdown-body h3{font-size:15px}";
+    h += ".message.ai .markdown-body ul,.message.ai .markdown-body ol{padding-left:20px;margin:6px 0}.message.ai .markdown-body li{margin:4px 0}";
+    h += ".message.ai .markdown-body pre{background:#f6f8fa;border:1px solid var(--border-color);border-radius:8px;padding:12px 16px;overflow-x:auto;margin:8px 0;font-size:13px;line-height:1.5}.message.ai .markdown-body code{background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:13px;font-family:'JetBrains Mono','Fira Code','Consolas',monospace;color:#d63384}.message.ai .markdown-body pre code{background:transparent;padding:0;border-radius:0;color:var(--text-primary)}";
+    h += ".message.ai .markdown-body p{margin:0 0 8px 0}.message.ai .markdown-body p:last-child{margin-bottom:0}";
+    h += ".message.ai .markdown-body{font-size:14px;line-height:1.7;color:var(--text-primary)}";
+    h += "/* ====== Markdown 渲染样式 END ====== ";
     h += "</style>";
+    h += '<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"><\/script>';
     h += "</head>";
     // 默认使用 light 主题
     h += '<body data-theme="light">';
@@ -879,14 +890,14 @@ function getHTMLPage(): string {
     h +=
         'ai.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();submitAsk()}});';
 
-    // 添加消息
+    // 添加消息（支持Markdown渲染）
     h += "function addMsg(role,content){";
     h += 'var hint=cm.querySelector(".empty-hint");if(hint)hint.remove();';
     h += "var now=new Date().toLocaleTimeString();";
     h += 'var div=document.createElement("div");';
     h += 'div.className="message "+role;';
     h +=
-        'div.innerHTML="<div class=\\"msg-label\\">"+(role==="user"?"\u{1F9D1} \u4F60":"\u{1F411} AI")+"</div>"+esc(content)+"<div class=\\"msg-time\\">"+now+"</div>";';
+        'div.innerHTML="<div class=\\"msg-label\\">"+(role==="user"?"\u{1F9D1} \u4F60":"\u{1F411} AI")+"</div>"+(role==="ai"?"<div class=\\"markdown-body\\">"+marked.parse(content)+"</div>":esc(content))+"<div class=\\"msg-time\\">"+now+"</div>";';
     h += "cm.appendChild(div);cm.scrollTop=cm.scrollHeight";
     h += "}";
 

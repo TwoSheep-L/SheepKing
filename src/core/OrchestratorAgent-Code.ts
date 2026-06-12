@@ -5,6 +5,7 @@ import UserInputTool from "@/tools/user_input.js";
 import FsTool from "@/tools/FsTools.js";
 import ReadCodeLinesTool from "@/tools/ReadCodeLinesTool.js";
 import RegexSearchTool from "@/tools/RegexSearchTool.js";
+import BaiduSearchTool from "@/tools/BaiduSearchTool.js";
 
 export class OrchestratorCodeAgent extends BaseAgent {
     constructor() {
@@ -14,7 +15,7 @@ export class OrchestratorCodeAgent extends BaseAgent {
 
         let systemPrompt = `# 代码智能调度中枢
 
-你是**代码任务调度中枢**，专注于处理所有与代码相关的用户需求。你的核心职责是根据用户的代码问题，选择最合适的子Agent来处理，而不是直接回答问题。
+你是**代码任务调度中枢**，专注于处理所有与代码相关的用户需求。你的核心职责是根据用户的代码问题来编写最合适的代码，完成用户的需求和任务。
 
 ## 已注册的子Agent列表：
 ${agentList}
@@ -38,6 +39,10 @@ ${agentList}
    - \`2S.md\` 文件映射了项目的核心功能与路径的匹配关系
 3. **将读取到的2S.md内容作为上下文传递给后续的子Agent**
    - 让子Agent了解项目的核心结构和路径映射关系，以便更精准地处理代码任务
+4. **读取rule**
+        - 在项目路径下查找 \`AiConfig\` 目录下的 \`rule\` 下的所有.md 文件
+        - 读取所有.md文件,这些文件都是这个项目的开发准则
+        - 你要严格按照这个这这些开发准测来进行开发
 
 > 💡 **判断标准**：如果用户提到的是项目名称、项目整体功能、跨文件改动、新增页面/模块等，均视为"项目级任务"；如果只是读取/修改单个文件，则视为"文件级任务"，不需要执行前置流程。
 
@@ -87,6 +92,9 @@ ${agentList}
 ### FsTool（文件操作）
 支持：read / write / delete / exists / mkdir / list / insertLine 等
 
+### BaiduSearchTool 
+百度搜索，用于搜索
+
 ## 代码任务调度优先级建议
 
 遇到以下问题时，优先考虑对应的Agent：
@@ -115,9 +123,10 @@ ${agentList}
                 new FsTool(),
                 new ReadCodeLinesTool(),
                 new RegexSearchTool(),
+                new BaiduSearchTool(),
             ],
             model: process.env.OPENAI_API_MODEL || "",
-            maxIterations: 50,
+            maxIterations: 500,
             description: "代码智能调度中枢",
         });
     }

@@ -1,0 +1,10 @@
+{
+  "name": "WebSearchSkill",
+  "description": "一个万能搜索技能，通过百度搜索引擎搜索各种内容（百科、商品、新闻、网页等），并可查看指定网页的详细内容。返回完整的搜索结果和可读的网页正文。",
+  "tools": [
+    "BaiduSearchTool",
+    "WebPageReaderTool"
+  ],
+  "status": "ONLINE",
+  "params": []
+}

@@ -85,7 +85,7 @@ export default class FsTool extends AgentTool<IFsToolParams> {
     constructor() {
         super({
             name: "FsTool",
-            description: "文件操作工具",
+            description: "文件操作工具,务必传入文件的绝对路径",
             parameters: [
                 {
                     name: "path",
