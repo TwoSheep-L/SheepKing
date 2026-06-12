@@ -1,10 +1,10 @@
 /**
  * 🐑 SSE (Server-Sent Events) Hook
- * 实时接收后端推送的控制台日志、AI 追问和确认事件
+ * 实时接收后端推送的控制台日志、AI 追问、确认事件和文件 diff
  */
 
 import { useEffect, useRef, useCallback } from 'react';
-import type { LogEntry, AskUserData, AskConfirmData } from '../types';
+import type { LogEntry, AskUserData, AskConfirmData, FileDiffEventData } from '../types';
 
 export interface SSEEventHandlers {
   /** 收到控制台日志 */
@@ -13,6 +13,8 @@ export interface SSEEventHandlers {
   onAskUser: (data: AskUserData) => void;
   /** 收到 AI 确认请求（确认/取消） */
   onAskConfirm: (data: AskConfirmData) => void;
+  /** 收到文件 diff 变更（实时展示在聊天中） */
+  onFileDiff?: (data: FileDiffEventData) => void;
   /** SSE 连接状态变化 */
   onStatusChange?: (connected: boolean) => void;
 }
@@ -67,6 +69,16 @@ export function useSSE(handlers: SSEEventHandlers, enabled: boolean = true) {
       try {
         const data = JSON.parse(e.data) as AskConfirmData;
         handlersRef.current.onAskConfirm(data);
+      } catch {
+        // JSON 解析失败时忽略
+      }
+    });
+
+    /** 处理文件 diff 事件（实时展示代码变更） */
+    es.addEventListener('file_diff', (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data) as FileDiffEventData;
+        handlersRef.current.onFileDiff?.(data);
       } catch {
         // JSON 解析失败时忽略
       }

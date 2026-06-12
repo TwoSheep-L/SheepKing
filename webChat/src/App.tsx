@@ -7,8 +7,9 @@
  * 3. Chat API 与 AI 对话
  * 4. User Input API 处理 AI 追问（文本输入）
  * 5. Confirm API 处理 AI 确认请求（确认/取消）
- * 6. 6 个浅色系主题切换
- * 7. 控制台日志实时面板
+ * 6. 文件 diff 实时展示（GitHub 风格代码变更）
+ * 7. 6 个浅色系主题切换
+ * 8. 控制台日志实时面板
  */
 
 import { useState, useCallback } from 'react';
@@ -20,15 +21,15 @@ import WelcomeModal from './components/WelcomeModal';
 import { useTheme } from './hooks/useTheme';
 import { useSSE } from './hooks/useSSE';
 import { useChat } from './hooks/useChat';
-import type { LogEntry } from './types';
+import type { LogEntry, FileDiffEventData } from './types';
 import styles from './App.module.less';
 
 export default function App() {
   // ---- 主题 ----
   const { theme, setTheme, themes } = useTheme();
 
-  // ---- 聊天 ----
-  const { messages, isLoading, sendMessage, replyToAsk } = useChat();
+  // ---- 聊天（含 diff 消息支持）----
+  const { messages, isLoading, sendMessage, replyToAsk, addDiffMessage } = useChat();
 
   // ---- 控制台日志 ----
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -61,15 +62,26 @@ export default function App() {
     setConfirmQuestion(data.question);
   }, []);
 
+  /** 处理 SSE 连接状态变化 */
   const handleStatusChange = useCallback((connected: boolean) => {
     setSseConnected(connected);
   }, []);
+
+  /**
+   * 🔄 处理文件 diff 事件
+   * 当 FsTool 修改文件时，后端通过 SSE 推送 file_diff 事件，
+   * 前端实时在聊天对话框中展示 GitHub 风格的代码变更
+   */
+  const handleFileDiff = useCallback((data: FileDiffEventData) => {
+    addDiffMessage(data);
+  }, [addDiffMessage]);
 
   useSSE(
     {
       onConsoleLog: addLog,
       onAskUser: handleAskUser,
       onAskConfirm: handleAskConfirm,
+      onFileDiff: handleFileDiff,
       onStatusChange: handleStatusChange,
     },
     true,

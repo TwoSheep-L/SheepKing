@@ -2,6 +2,7 @@ import { AgentTool } from "@/core/BaseAgentTool.js";
 import { confirm, log } from "@clack/prompts";
 import fs from "fs";
 import path from "path";
+import { generateDiff, formatDiffForSSE } from "./DiffUtils.js";
 
 interface IFsToolParams {
     path: string;
@@ -81,6 +82,21 @@ function formatTree(
     return result;
 }
 
+/**
+ * 尝试广播文件 diff 到前端（通过全局 broadcastDiff 函数）
+ * 仅在 webChat server 环境下有效，CLI 模式下静默跳过
+ */
+function tryBroadcastDiff(diffData: Record<string, unknown>): void {
+    try {
+        const broadcastFn = (global as any).__broadcastDiff;
+        if (typeof broadcastFn === 'function') {
+            broadcastFn(diffData);
+        }
+    } catch {
+        // CLI 模式下没有 broadcastDiff，静默跳过
+    }
+}
+
 export default class FsTool extends AgentTool<IFsToolParams> {
     constructor() {
         super({
@@ -120,35 +136,74 @@ export default class FsTool extends AgentTool<IFsToolParams> {
         const { path: filePath, action, content, lineNumber } = params;
         log.info(`执行文件操作工具 [${action}]${filePath}`);
 
+        // ===== write: 写入文件（带 diff 展示）=====
         if (action === "write") {
+            // 读取旧文件内容（如果存在）
+            let oldContent = "";
+            let fileExists = false;
+            try {
+                if (fs.existsSync(filePath)) {
+                    oldContent = fs.readFileSync(filePath, "utf-8");
+                    fileExists = true;
+                }
+            } catch {
+                // 读取失败视为无旧内容
+            }
+
+            // 执行写入
             fs.writeFileSync(filePath, content);
+
+            // 后置检测
             if (!fs.existsSync(filePath)) {
                 return "[后置检测]创建失败,执行写入命令后检测文件不存在";
             }
-            return "文件写入成功";
+
+            // 生成并广播 diff
+            const diff = generateDiff(
+                filePath,
+                "write",
+                oldContent,
+                content,
+                !fileExists
+            );
+
+            // 通过 console.log 输出 diff 摘要（CLI 模式下可见）
+            log.info(`📊 文件变更: +${diff.additions} / -${diff.deletions} 行`);
+
+            // 广播 diff 到前端（SSE）
+            tryBroadcastDiff(formatDiffForSSE(diff));
+
+            // 返回结果（包含 diff 文本，让 AI 也能感知到变更）
+            return `文件写入成功\n${diff.text}`;
         }
 
+        // ===== read: 读取文件 =====
         if (action === "read") {
             return fs.readFileSync(filePath, "utf-8");
         }
 
+        // ===== exists: 检查文件是否存在 =====
         if (action === "exists") {
             return fs.existsSync(filePath) ? "文件存在" : "文件不存在";
         }
 
+        // ===== dir: 读取目录列表 =====
         if (action === "dir") {
             return fs.readdirSync(filePath).join(",");
         }
 
+        // ===== mkdir: 创建目录 =====
         if (action === "mkdir") {
             fs.mkdirSync(filePath);
             return "文件夹创建成功";
         }
 
+        // ===== list: 读取目录列表 =====
         if (action === "list") {
             return fs.readdirSync(filePath).join(",");
         }
 
+        // ===== treeList: 目录树 =====
         if (action === "treeList") {
             const tree = getTree(filePath);
 
@@ -163,6 +218,7 @@ export default class FsTool extends AgentTool<IFsToolParams> {
             return output;
         }
 
+        // ===== listDir: 仅列出子目录 =====
         if (action === "listDir") {
             return fs
                 .readdirSync(filePath)
@@ -172,6 +228,7 @@ export default class FsTool extends AgentTool<IFsToolParams> {
                 .join(",");
         }
 
+        // ===== delete: 删除文件/目录 =====
         if (action === "delete") {
             const userCheck = await confirm({
                 message: `AI请求删除:${filePath} 是否要删除?`,
@@ -188,24 +245,39 @@ export default class FsTool extends AgentTool<IFsToolParams> {
             }
         }
 
+        // ===== insertLine: 在指定行插入内容（带 diff 展示）=====
         if (action === "insertLine") {
+            // 读取旧内容
+            const oldContent = fs.readFileSync(filePath, "utf-8");
+
+            // 执行插入
             const fileContent = fs.readFileSync(filePath, "utf-8");
             const lines = fileContent.split("\n");
             const targetLine = lineNumber ?? lines.length + 1;
 
             if (targetLine < 1) {
-                // 行号小于1，在开头插入
                 lines.unshift(content);
             } else if (targetLine > lines.length) {
-                // 行号大于文件总行数，在末尾追加
                 lines.push(content);
             } else {
-                // 在指定行之前插入（原第N行变为第N+1行）
                 lines.splice(targetLine - 1, 0, content);
             }
 
-            fs.writeFileSync(filePath, lines.join("\n"));
-            return "行插入成功";
+            const newContent = lines.join("\n");
+            fs.writeFileSync(filePath, newContent);
+
+            // 生成并广播 diff
+            const diff = generateDiff(
+                filePath,
+                "insertLine",
+                oldContent,
+                newContent
+            );
+
+            log.info(`📊 文件变更: +${diff.additions} / -${diff.deletions} 行`);
+            tryBroadcastDiff(formatDiffForSSE(diff));
+
+            return `行插入成功\n${diff.text}`;
         }
 
         return "";

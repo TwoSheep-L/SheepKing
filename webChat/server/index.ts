@@ -70,6 +70,18 @@ function broadcastSSE(event: string, data: Record<string, unknown>) {
   }
 }
 
+/**
+ * 全局文件 diff 广播函数
+ * 供 FsTool 等工具调用，实时向前端推送文件变更 diff
+ * 格式：{ type, filePath, action, additions, deletions, lines, text, timestamp }
+ */
+(global as any).__broadcastDiff = (diffData: Record<string, unknown>) => {
+  broadcastSSE('file_diff', diffData);
+  _log(`📊 [FileDiff] ${diffData.filePath} (+${diffData.additions}/-${diffData.deletions})`);
+};
+
+
+
 /** 保存原始控制台方法引用 */
 const _log = console.log.bind(console);
 const _error = console.error.bind(console);

@@ -1,10 +1,13 @@
 /**
  * 🐑 单条消息组件
- * 支持用户消息和 AI 消息两种样式，AI 消息内容使用 Markdown 渲染
+ * 支持用户消息和 AI 消息两种样式
+ * - 普通 AI 消息使用 Markdown 渲染
+ * - file_diff 类型消息使用 DiffView 渲染（GitHub 风格代码变更展示）
  */
 
 import { useMemo } from 'react';
 import type { Message } from '../../types';
+import DiffView from '../DiffView';
 import styles from './index.module.less';
 
 interface MessageItemProps {
@@ -80,19 +83,31 @@ export default function MessageItem({ message }: MessageItemProps) {
     return escapeHtml(message.content);
   }, [message.role, message.content]);
 
+  // 判断是否为文件 diff 消息
+  const isFileDiff = message.type === 'file_diff' && message.diffData;
+
   return (
-    <div className={`${styles.message} ${styles[message.role]}`}>
+    <div className={`${styles.message} ${styles[message.role]} ${isFileDiff ? styles.fileDiff : ''}`}>
       <div className={styles.label}>
-        {message.role === 'user' ? '🧑 你' : '🐑 AI'}
+        {message.role === 'user' ? '🧑 你' : isFileDiff ? '📝 文件变更' : '🐑 AI'}
       </div>
-      {message.role === 'ai' ? (
+
+      {/* 文件 diff 消息使用 DiffView 组件渲染 */}
+      {isFileDiff && message.diffData ? (
+        <div className={styles.diffWrapper}>
+          <DiffView diffData={message.diffData} />
+        </div>
+      ) : message.role === 'ai' ? (
+        /* 普通 AI 消息使用 Markdown 渲染 */
         <div
           className={`${styles.content} markdown-body`}
           dangerouslySetInnerHTML={{ __html: renderedContent }}
         />
       ) : (
+        /* 用户消息纯文本展示 */
         <div className={styles.content}>{renderedContent}</div>
       )}
+
       <div className={styles.time}>{formattedTime}</div>
     </div>
   );
