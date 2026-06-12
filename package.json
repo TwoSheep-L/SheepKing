@@ -12,7 +12,11 @@
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit",
     "create-skill": "tsx src/CreateSkillRun.js",
-    "chat": "tsx chat-server.ts"
+
+    "build:webChat": "cd webChat && npx vite build",
+    "webChat:dev": "cd webChat && npm run dev",
+    "webChat:serve": "npx tsx webChat/server/index.ts",
+    "webChat:start": "npm run build:webChat && npm run webChat:serve"
   },
   "keywords": [],
   "author": "",

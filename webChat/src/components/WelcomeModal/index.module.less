@@ -1,0 +1,229 @@
+/**
+ * 🐑 欢迎弹窗样式
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay, rgba(0, 0, 0, 0.4));
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  background: var(--bg-secondary, #fff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 20px;
+  padding: 36px 40px 32px;
+  max-width: 640px;
+  width: 92%;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.15);
+  animation: modalIn 0.35s ease;
+}
+
+@keyframes modalIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4a90d9, #7ec8a3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-tertiary, #999);
+  margin-bottom: 28px;
+}
+
+// ====== 模式选择按钮 ======
+.modeButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.modeBtn {
+  flex: 1;
+  max-width: 220px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  border: 2px solid var(--border-color, #e0e0e0);
+  background: var(--bg-primary, #f5f5f5);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    border-color: var(--accent-blue, #4a90d9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.modeIcon {
+  font-size: 36px;
+  color: var(--accent-blue, #4a90d9);
+}
+
+.modeLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a2e);
+}
+
+.modeDesc {
+  font-size: 12px;
+  color: var(--text-tertiary, #999);
+  line-height: 1.4;
+}
+
+// ====== 项目表单 ======
+.projectList {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.projectRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.rowLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+.input {
+  flex: 1;
+  background: var(--bg-primary, #f5f5f5);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-primary, #1a1a2e);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: var(--accent-blue, #4a90d9);
+  }
+}
+
+.delBtn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color, #e0e0e0);
+  background: var(--bg-tertiary, #e8e8e8);
+  color: var(--text-tertiary, #999);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: #f85149;
+    color: #fff;
+    border-color: #f85149;
+  }
+}
+
+// ====== 新增按钮（虚线边框） ======
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  border: 2px dashed var(--border-color, #e0e0e0);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-tertiary, #999);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+
+  &:hover {
+    border-color: var(--accent-blue, #4a90d9);
+    color: var(--accent-blue, #4a90d9);
+    background: color-mix(in srgb, var(--accent-blue, #4a90d9) 5%, transparent);
+  }
+}
+
+// ====== 表单操作按钮 ======
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btnBack {
+  padding: 10px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border-color, #e0e0e0);
+  background: var(--bg-tertiary, #e8e8e8);
+  color: var(--text-secondary, #555);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: var(--border-color, #e0e0e0);
+  }
+}
+
+.btnGo {
+  padding: 10px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(135deg, #4a90d9, #6ab0f7);
+  color: #fff;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
